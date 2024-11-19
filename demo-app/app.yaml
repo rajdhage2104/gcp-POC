@@ -1,0 +1,36 @@
+runtime: nodejs
+
+runtime_config:
+    operating_system: "ubuntu22"
+    runtime_version: "18"
+
+env: flex
+
+handlers:
+  - url: /(.*)
+    static_files: build/\1
+    upload: build/(.*)
+
+  - url: /
+    static_files: build/index.html
+    upload: build/index.html
+
+network: 
+   name: default
+   subnetwork_name: default
+
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 15
+  cool_down_period_sec: 180
+  cpu_utilization:
+    target_utilization: 0.6
+  target_concurrent_requests: 100
+
+
+liveness_check:
+  path: "/liveness_check"
+  check_interval_sec: 30
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2
